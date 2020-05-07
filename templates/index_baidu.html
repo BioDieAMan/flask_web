@@ -1,0 +1,174 @@
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta http-equiv="refresh" content="3;url={{ url_for('index') }}"> -->
+    <title>疫苗运输服务平台</title>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script src="/static/js/jquery-2.2.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/dataTool.js"></script>
+    <script src="/static/js/index.js"></script>
+    <script src="/static/js/china.js"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=p348z9PLodkFiZlPPUm7TzQlUAylqueb"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
+    <!-- <script src="/static/js/hunan.js"></script> -->
+
+
+
+
+    <style>
+        .t_title {
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            font-size: 2.5em;
+            line-height: 80px;
+            color: #fff;
+        }
+
+        #chart_map {
+            cursor: pointer;
+        }
+
+        .t_show {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-radius: 2px;
+            background: #2C58A6;
+            padding: 2px 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--header-->
+    <div class="header">
+        <div class="bg_header">
+            <div class="header_nav fl t_title">
+                疫苗运输服务平台
+            </div>
+        </div>
+    </div>
+
+    <!--main-->
+    <div class="data_content">
+        <div class="data_time">
+            温馨提示: 点击模块后跳转至详情页面。
+            本产品部分代码来自源码之家
+        </div>
+
+        <div class="data_main">
+            <div class="main_center fl">
+                <div class="center_text">
+                    <!--左上边框-->
+                    <div class="t_line_box">
+                        <i class="t_l_line"></i>
+                        <i class="l_t_line"></i>
+                    </div>
+                    <!--右上边框-->
+                    <div class="t_line_box">
+                        <i class="t_r_line"></i>
+                        <i class="r_t_line"></i>
+                    </div>
+                    <!--左下边框-->
+                    <div class="t_line_box">
+                        <i class="l_b_line"></i>
+                        <i class="b_l_line"></i>
+                    </div>
+                    <!--右下边框-->
+                    <div class="t_line_box">
+                        <i class="r_b_line"></i>
+                        <i class="b_r_line"></i>
+                    </div>
+                    <div class="main_title">
+                        <img src="/static/img/t_3.png" alt="">
+                        疫苗线路图
+                    </div>
+                    <div style="width:100%;height:100%;border:1px solid gray" id="container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <p>更多模板：<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+    </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("container");
+    map.centerAndZoom(new BMap.Point(118.454, 32.955), 6);
+    map.enableScrollWheelZoom();
+
+    var GZData = [];
+
+    $(document).ready(function () {
+        getData();
+    });
+
+    function getData() {
+        $.ajax({
+            url: 'test',
+            data: {},
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                var length = data.name_1.length
+                console.log(data)
+                console.log(typeof length)
+
+                for (i = 0; i < length; i++) {
+                    var element = [
+                        [{
+                            //legname1:[],
+                            name: [],
+                            value: [],
+                            longitude: [],
+                            latitude: []
+                        }, {
+                            name: [],
+                            value: [],
+                            longitude: [],
+                            latitude: []
+                        }]
+                    ]
+                    element[0][0].name = data.name_1[i];
+                    element[0][0].value = data.tempreture_1[i];
+                    element[0][0].longitude = data.longitude_1[i];
+                    element[0][0].latitude = data.latitude_1[i];
+                    element[0][1].name = data.name_2[i];
+                    element[0][1].value = data.tempreture_2[i];
+                    element[0][1].longitude = data.longitude_2[i];
+                    element[0][1].latitude = data.latitude_2[i];
+                    var pos1 = new BMap.Point(element[0][0].longitude, element[0][0].latitude),
+                        pos2 = new BMap.Point(element[0][1].longitude, element[0][1].latitude);
+                    var points = [pos1, pos2];
+
+                    var curve = new BMap.Polyline(points, {
+                        strokeColor: "blue",
+                        strokeWeight: 3,
+                        strokeOpacity: 0
+                    }); //创建弧线对象
+                    map.addOverlay(curve); //添加到地图中
+                }
+                var marker = new BMap.Marker(pos2); // 创建标注
+                map.addOverlay(marker); // 将标注添加到地图中
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            }
+        })
+    }
+</script>
