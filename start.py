@@ -1,5 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request
+# from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, jsonify
 import sqlite3
 import json
 from datetime import timedelta
@@ -10,6 +10,23 @@ app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=0)
 
 
+@app.route('/get', methods=['get'])
+def get():
+    # connection = sqlite3.connect('./newtest.db')
+    # cur = connection.cursor()
+    # sql = 'SELECT * FROM info'
+    # cur.execute(sql)
+    # see = cur.fetchall()
+    # print('-------------------------')
+    # print(see)
+    # print('-------------------------')
+    print('请求方式为------->', request.method)
+    args = request.args.get("name")  # 获取  get  参数
+    form = request.args.get('data')  # 获取  post 参数
+    print(args)
+    print(form)
+    print("=========成功 生成 index.html================")
+    return jsonify(args=(args,form))
 
 
 @app.route('/test', methods=['POST'])
@@ -66,4 +83,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(port=8090)
+    app.run(host='0.0.0.0', port=8090)
