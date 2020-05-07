@@ -10,6 +10,8 @@ app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=0)
 
 
+
+
 @app.route('/test', methods=['POST'])
 def test():
     connection = sqlite3.connect('./newtest.db')
