@@ -12,6 +12,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 
 
+@app.route('/get', methods=['GET'])
+def get():
+    # connection = sqlite3.connect('./newtest.db')
+    # cur = connection.cursor()
+    # sql = 'SELECT * FROM info'
+    # cur.execute(sql)
+    # see = cur.fetchall()
+    # print('-------------------------')
+    # print(see)
+    # print('-------------------------')
+    print('请求方式为------->', request.method)
+    args = request.args.get("name")  # 获取  get  参数
+    form = request.args.get('data')  # 获取  post 参数
+    print(args)
+    print(form)
+    print("=========成功 生成 index.html==============")
+    return jsonify(args=(args, form))
+
+
+@app.route('/get_wechat', methods=['GET'])
 def get():
     # connection = sqlite3.connect('./newtest.db')
     # cur = connection.cursor()
