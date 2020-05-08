@@ -1,4 +1,6 @@
 # from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, jsonify
+import sqlite3
 import json
 import sqlite3
 from datetime import timedelta
@@ -8,10 +10,8 @@ from flask import Flask, jsonify, render_template, request
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=0)
 
 
-@app.route('/get', methods=['get'])
 def get():
     # connection = sqlite3.connect('./newtest.db')
     # cur = connection.cursor()
@@ -26,6 +26,8 @@ def get():
     form = request.args.get('data')  # 获取  post 参数
     print(args)
     print(form)
+    print("=========成功 生成 index.html================")
+    return jsonify(args=(args, form))
     print("=========成功 生成 index.html========")
     return jsonify(args=('args', 'form'))
 
@@ -50,28 +52,23 @@ def test():
     longitude_2 = []
     latitude_2 = []
     jsonData = {}
-
     for data in see:
         name_1.append(data[1])
         tempreture_1.append(data[2])
         longitude_1.append(data[3])
         latitude_1.append(data[4])
-
         name_2.append(data[5])
         tempreture_2.append(data[6])
         longitude_2.append(data[7])
         latitude_2.append(data[8])
-
     jsonData['name_1'] = name_1
     jsonData['tempreture_1'] = tempreture_1
     jsonData['longitude_1'] = longitude_1
     jsonData['latitude_1'] = latitude_1
-
     jsonData['name_2'] = name_2
     jsonData['tempreture_2'] = tempreture_2
     jsonData['longitude_2'] = longitude_2
     jsonData['latitude_2'] = latitude_2
-
     dataout = json.dumps(jsonData)
     cur.close()
     connection.close()
