@@ -1,8 +1,9 @@
 # from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, request, jsonify
-import sqlite3
 import json
+import sqlite3
 from datetime import timedelta
+
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
@@ -25,8 +26,8 @@ def get():
     form = request.args.get('data')  # 获取  post 参数
     print(args)
     print(form)
-    print("=========成功 生成 index.html================")
-    return jsonify(args=(args,form))
+    print("=========成功 生成 index.html========")
+    return jsonify(args=('args', 'form'))
 
 
 @app.route('/test', methods=['POST'])
