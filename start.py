@@ -26,7 +26,7 @@ def get():
     form = request.args.get('data')  # 获取  post 参数
     print(args)
     print(form)
-    print("=========成功 生成 index.html================")
+    print("=========成功 生成 index.html==============")
     return jsonify(args=(args, form))
 
 
