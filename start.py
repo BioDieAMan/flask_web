@@ -28,8 +28,6 @@ def get():
     print(form)
     print("=========成功 生成 index.html================")
     return jsonify(args=(args, form))
-    print("=========成功 生成 index.html========")
-    return jsonify(args=('args', 'form'))
 
 
 @app.route('/test', methods=['POST'])
