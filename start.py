@@ -32,7 +32,7 @@ def get():
 
 
 @app.route('/get_wechat', methods=['GET'])
-def get():
+def get_wechat():
     # connection = sqlite3.connect('./newtest.db')
     # cur = connection.cursor()
     # sql = 'SELECT * FROM info'
@@ -42,12 +42,12 @@ def get():
     # print(see)
     # print('-------------------------')
     print('请求方式为------->', request.method)
-    args = request.args.get("name")  # 获取  get  参数
+    # args = request.args.get("name")  # 获取  get  参数
     form = request.args.get('data')  # 获取  post 参数
-    print(args)
+    # print(args)
     print(form)
     print("=========成功 生成 index.html==============")
-    return jsonify(args=(args, form))
+    return jsonify(data=(form))
 
 
 @app.route('/test', methods=['POST'])
