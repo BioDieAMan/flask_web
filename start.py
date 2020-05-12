@@ -1,3 +1,4 @@
+# coding=utf-8
 # from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, jsonify
 import sqlite3
@@ -23,15 +24,19 @@ def get():
     # print(see)
     # print('-------------------------')
     print('请求方式为------->', request.method)
-    args = request.args.get("name")  # 获取  get  参数
-    form = request.args.get('data')  # 获取  post 参数
-    print(args)
-    print(form)
+    idd = request.args.get("id")
+    temp = request.args.get('temp')
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    lock = request.args.get('lock')
+    time = request.args.get('time')
+
+    print(idd, temp, lat, lon, lock, time)
     print("=========成功 生成 index.html==============")
-    return jsonify(args=(args, form))
+    return jsonify(lock=1)
 
 
-@app.route('/get_wechat', methods=['GET'])
+@app.route('/get-wechat', methods=['GET'])
 def get_wechat():
     # connection = sqlite3.connect('./newtest.db')
     # cur = connection.cursor()
@@ -43,9 +48,10 @@ def get_wechat():
     # print('-------------------------')
     print('请求方式为------->', request.method)
     # args = request.args.get("name")  # 获取  get  参数
-    form = request.args.get('data')  # 获取  post 参数
+    form = request.args.get('number')  # 获取  post 参数
     # print(args)
     print(form)
+    print(type(form))
     print("=========成功 生成 index.html==============")
     return jsonify(data=(form))
 
