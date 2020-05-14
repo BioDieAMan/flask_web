@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from flask import Flask, jsonify, render_template, request
 
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
@@ -23,7 +24,7 @@ def get():
     # print('-------------------------')
     # print(see)
     # print('-------------------------')
-    print('请求方式为------->', request.method)
+    print('请求方式为------------------>', request.method)
     idd = request.args.get("id")
     temp = request.args.get('temp')
     lat = request.args.get('lat')
