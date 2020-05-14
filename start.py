@@ -24,7 +24,7 @@ def get():
     # print('-------------------------')
     # print(see)
     # print('-------------------------')
-    print('请求方式为------------------>', request.method)
+    print('请求方式为--------------------->', request.method)
     idd = request.args.get("id")
     temp = request.args.get('temp')
     lat = request.args.get('lat')
