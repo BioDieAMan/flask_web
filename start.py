@@ -24,7 +24,7 @@ def get():
     # print('-------------------------')
     # print(see)
     # print('-------------------------')
-    print('请求方式为------------------>', request.method)
+    print('请求方式为--------------------->', request.method)
     idd = request.args.get("id")
     temp = request.args.get('temp')
     lat = request.args.get('lat')
@@ -106,4 +106,5 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8090)
+    app.run(host='0.0.0.0', port=8090, ssl_context=(
+        './3905801_www.coocha.top.pem', './3905801_www.coocha.top.key'))
