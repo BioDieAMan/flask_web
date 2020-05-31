@@ -14,29 +14,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 
 
-@app.route('/get', methods=['GET'])
-def get():
-    # connection = sqlite3.connect('./newtest.db')
-    # cur = connection.cursor()
-    # sql = 'SELECT * FROM info'
-    # cur.execute(sql)
-    # see = cur.fetchall()
-    # print('-------------------------')
-    # print(see)
-    # print('-------------------------')
-    print('请求方式为--------------------->', request.method)
-    idd = request.args.get("id")
-    temp = request.args.get('temp')
-    lat = request.args.get('lat')
-    lon = request.args.get('lon')
-    lock = request.args.get('lock')
-    time = request.args.get('time')
-
-    print(idd, temp, lat, lon, lock, time)
-    print("=========成功 生成 index.html==============")
-    return jsonify(lock=1)
-
-
 @app.route('/get-wechat', methods=['GET'])
 def get_wechat():
     # connection = sqlite3.connect('./newtest.db')
