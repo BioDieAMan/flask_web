@@ -13,8 +13,9 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/common.js"></script>
     <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/modernizr.js"></script>
+    <!-- <script src='/static/js/jquery.js'></script> -->
     <script src="/static/js/dataTool.js"></script>
-    <script src="/static/js/index.js"></script>
     <script src="/static/js/china.js"></script>
     <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=p348z9PLodkFiZlPPUm7TzQlUAylqueb"></script>
     <script type="text/javascript" src="//api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
@@ -65,10 +66,83 @@
     <div class="data_content">
         <div class="data_time">
             温馨提示: 点击模块后跳转至详情页面。
-            本产品部分代码来自源码之家
         </div>
 
         <div class="data_main">
+            <div class="main_left fl">
+                <div class="left_1 t_btn6" style="cursor: pointer;">
+                    <!--左上边框-->
+                    <div class="t_line_box">
+                        <i class="t_l_line"></i>
+                        <i class="l_t_line"></i>
+                    </div>
+                    <!--右上边框-->
+                    <div class="t_line_box">
+                        <i class="t_r_line"></i>
+                        <i class="r_t_line"></i>
+                    </div>
+                    <!--左下边框-->
+                    <div class="t_line_box">
+                        <i class="l_b_line"></i>
+                        <i class="b_l_line"></i>
+                    </div>
+                    <!--右下边框-->
+                    <div class="t_line_box">
+                        <i class="r_b_line"></i>
+                        <i class="b_r_line"></i>
+                    </div>
+                    <div class="main_title">
+                        <img src="/static/img/t_1.png" alt="">
+                        温度图!!!rua!!
+                    </div>
+                    <div id="chart_1" class="chart" style="width:100%;height: 280px;">
+                        <div class="chart" id="graph-2-container">
+                            <h2 class="title">tempreture</h2>
+                            <div class="chart-svg">
+                                <svg class="chart-line" id="chart-2" viewBox="0 0 80 40">
+                                    <defs>
+                                        <clipPath id="clip" x="0" y="0" width="80" height="40">
+                                            <rect id="clip-rect" x="-80" y="0" width="77" height="38.7" />
+                                        </clipPath>
+
+                                        <linearGradient id="gradient-1">
+                                            <stop offset="0" stop-color="#00d5bd" />
+                                            <stop offset="100" stop-color="#24c1ed" />
+                                        </linearGradient>
+
+                                        <linearGradient id="gradient-2">
+                                            <stop offset="0" stop-color="#954ce9" />
+                                            <stop offset="0.3" stop-color="#954ce9" />
+                                            <stop offset="0.6" stop-color="#24c1ed" />
+                                            <stop offset="1" stop-color="#24c1ed" />
+                                        </linearGradient>
+
+                                        <linearGradient id="gradient-3" x1="0%" y1="0%" x2="0%" y2="100%">>
+                                            <stop offset="0" stop-color="rgba(0, 213, 189, 1)" stop-opacity="0.07" />
+                                            <stop offset="0.5" stop-color="rgba(0, 213, 189, 1)" stop-opacity="0.13" />
+                                            <stop offset="1" stop-color="rgba(0, 213, 189, 1)" stop-opacity="0" />
+                                        </linearGradient>
+
+
+                                        <linearGradient id="gradient-4" x1="0%" y1="0%" x2="0%" y2="100%">>
+                                            <stop offset="0" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0.07" />
+                                            <stop offset="0.5" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0.13" />
+                                            <stop offset="1" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0" />
+                                        </linearGradient>
+
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="chart-values">
+                                <p class="h-value"></p>
+                                <p class="percentage-value"></p>
+                                <p class="total-gain"></p>
+                            </div>
+                            <div class="triangle red"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="main_center fl">
                 <div class="center_text">
                     <!--左上边框-->
@@ -103,6 +177,9 @@
     <div style="text-align:center;">
         <p>更多模板：<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
     </div>
+
+    <script src='/static/js/snap.svg-min.js'></script>
+    <script src="/static/js/index.js"></script>
 </body>
 
 </html>

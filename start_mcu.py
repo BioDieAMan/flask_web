@@ -33,15 +33,67 @@ def get():
     time = request.args.get('time')
 
     print(idd, temp, lat, lon, lock, time)
+    # 写入数据库
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM info'
+    cur.execute(sql)
+    see = cur.fetchall()
+    print('-------------------------')
+    print(see)
+    print('-------------------------')
+    id = []
+    name_1 = []
+    tempreture_1 = []
+    longitude_1 = []
+    latitude_1 = []
+    for data in see:
+        name_1.append(data[1])
+        tempreture_1.append(data[2])
+        longitude_1.append(data[3])
+        latitude_1.append(data[4])
+    print(longitude_1)
+    if longitude_1.find(lon) != -1 and latitude_1.find(lat) != -1:
+        new_sql = "INSERT INTO info" + \
+            "(id, name, tempreture, " + \
+            "longitude, latitude,lock,time)VALUES(" + \
+            str(idd)+","+"'newplace'"+","+str(temp) + \
+            ","+str(lon)+","+str(lat)+","+str(lock)+","+str(time)+")"
+        cur.execute(new_sql)
+
+    cur.close()
+    connection.close()
+
     print("=========成功 生成 index.html==============")
     return jsonify(lock=1)
+
+
+@app.route('/temp', methods=['POST'])
+def temp():
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM coocha'
+    cur.execute(sql)
+    see = cur.fetchall()
+    print('-------------------------')
+    print(see)
+    print('-------------------------')
+    tempreture_1 = []
+    jsonData = {}
+    for data in see:
+        tempreture_1.append(data[2])
+    jsonData['tempreture_1'] = tempreture_1
+    dataout = json.dumps(jsonData)
+    cur.close()
+    connection.close()
+    return (dataout)
 
 
 @app.route('/test', methods=['POST'])
 def test():
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM info'
+    sql = 'SELECT * FROM coocha'
     cur.execute(sql)
     see = cur.fetchall()
     print('-------------------------')
@@ -57,15 +109,19 @@ def test():
     longitude_2 = []
     latitude_2 = []
     jsonData = {}
-    for data in see:
-        name_1.append(data[1])
-        tempreture_1.append(data[2])
-        longitude_1.append(data[3])
-        latitude_1.append(data[4])
-        name_2.append(data[5])
-        tempreture_2.append(data[6])
-        longitude_2.append(data[7])
-        latitude_2.append(data[8])
+    for index, data in enumerate(see):
+        if index != len(see)-1:
+            name_1.append(data[1])
+            tempreture_1.append(data[2])
+            longitude_1.append(data[3])
+            latitude_1.append(data[4])
+            name_2.append(see[index+1][1])
+            tempreture_2.append(see[index+1][2])
+            longitude_2.append(see[index+1][3])
+            latitude_2.append(see[index+1][4])
+        if index == len(see)-1:
+            pass
+
     jsonData['name_1'] = name_1
     jsonData['tempreture_1'] = tempreture_1
     jsonData['longitude_1'] = longitude_1
@@ -86,4 +142,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8090)
+    app.run(host='0.0.0.0', port=8090, debug=True)
