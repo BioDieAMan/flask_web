@@ -16,34 +16,66 @@ app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 
 @app.route('/get-wechat', methods=['GET'])
 def get_wechat():
-    # connection = sqlite3.connect('./newtest.db')
-    # cur = connection.cursor()
-    # sql = 'SELECT * FROM info'
-    # cur.execute(sql)
-    # see = cur.fetchall()
-    # print('-------------------------')
-    # print(see)
-    # print('-------------------------')
     print('请求方式为------->', request.method)
-    # args = request.args.get("name")  # 获取  get  参数
-    form = request.args.get('number')  # 获取  post 参数
-    # print(args)
+    # args = request.args.get("name")
+    form = request.args.get('number')
     print(form)
     print(type(form))
+
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM coocha where id='+str(form)
+    cur.execute(sql)
+    see = cur.fetchall()
+
+    id = []
+    name = []
+    tempreture = []
+    longitude = []
+    latitude = []
+    jsonData = {}
+    for index, data in enumerate(see):
+        tempreture.append(data[2])
+        if index == len(see)-1:
+            longitude.append(data[3])
+            latitude.append(data[4])
+    jsonData['tempreture'] = tempreture
+    jsonData['longitude'] = longitude
+    jsonData['latitude'] = latitude
+    jsonData['lock'] = ['0']
+    dataout = json.dumps(jsonData)
+    cur.close()
+    connection.close()
+
     print("=========成功 生成 index.html==============")
-    return jsonify(data=(form))
+    return jsonify(data=(dataout))
+
+
+@app.route('/temp', methods=['POST'])
+def temp():
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM coocha'
+    cur.execute(sql)
+    see = cur.fetchall()
+    tempreture_1 = []
+    jsonData = {}
+    for data in see:
+        tempreture_1.append(data[2])
+    jsonData['tempreture_1'] = tempreture_1
+    dataout = json.dumps(jsonData)
+    cur.close()
+    connection.close()
+    return (dataout)
 
 
 @app.route('/test', methods=['POST'])
 def test():
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM info'
+    sql = 'SELECT * FROM coocha'
     cur.execute(sql)
     see = cur.fetchall()
-    print('-------------------------')
-    print(see)
-    print('-------------------------')
     id = []
     name_1 = []
     tempreture_1 = []
@@ -54,15 +86,19 @@ def test():
     longitude_2 = []
     latitude_2 = []
     jsonData = {}
-    for data in see:
-        name_1.append(data[1])
-        tempreture_1.append(data[2])
-        longitude_1.append(data[3])
-        latitude_1.append(data[4])
-        name_2.append(data[5])
-        tempreture_2.append(data[6])
-        longitude_2.append(data[7])
-        latitude_2.append(data[8])
+    for index, data in enumerate(see):
+        if index != len(see)-1:
+            name_1.append(data[1])
+            tempreture_1.append(data[2])
+            longitude_1.append(data[3])
+            latitude_1.append(data[4])
+            name_2.append(see[index+1][1])
+            tempreture_2.append(see[index+1][2])
+            longitude_2.append(see[index+1][3])
+            latitude_2.append(see[index+1][4])
+        if index == len(see)-1:
+            pass
+
     jsonData['name_1'] = name_1
     jsonData['tempreture_1'] = tempreture_1
     jsonData['longitude_1'] = longitude_1

@@ -14,6 +14,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 
 
+@app.route('/search', methods=['GET'])
+def search():
+    idd = request.args.get('id')
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM info'
+    cur.execute(sql)
+    see = cur.fetchall()
+
+    name_1 = []
+    tempreture_1 = []
+    longitude_1 = []
+    latitude_1 = []
+    for data in see:
+        name_1.append(data[1])
+        tempreture_1.append(data[2])
+        longitude_1.append(data[3])
+        latitude_1.append(data[4])
+
+
 @app.route('/get', methods=['GET'])
 def get():
     # connection = sqlite3.connect('./newtest.db')
@@ -47,12 +67,14 @@ def get():
     tempreture_1 = []
     longitude_1 = []
     latitude_1 = []
+    jsondata = {}
     for data in see:
         name_1.append(data[1])
         tempreture_1.append(data[2])
         longitude_1.append(data[3])
         latitude_1.append(data[4])
-    print(longitude_1)
+
+    jsondata = json.dumps(jsondata)
     if longitude_1.find(lon) != -1 and latitude_1.find(lat) != -1:
         new_sql = "INSERT INTO info" + \
             "(id, name, tempreture, " + \
@@ -89,8 +111,17 @@ def temp():
     return (dataout)
 
 
-@app.route('/test', methods=['POST'])
+@app.route('/test', methods=['GET'])
 def test():
+    print('请求方式为--------------------->', request.method)
+    idd = request.args.get("id")
+    temp = request.args.get('temp')
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    lock = request.args.get('lock')
+    time = request.args.get('time')
+
+    print(idd, temp, lat, lon, lock, time)
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
     sql = 'SELECT * FROM coocha'

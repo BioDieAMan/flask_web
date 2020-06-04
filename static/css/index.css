@@ -24,96 +24,6 @@
     left: 15px;
 }
 
-.data_content .data_info {
-    width: calc(100% - 40px);
-    margin-bottom: 40px;
-    height: 110px;
-    margin-left: 20px;
-}
-
-.data_content .data_info .info_1 {
-    width: 40%;
-    height: 110px;
-}
-
-.data_content .data_info .info_1>.text_1 {
-    width: calc(100% - 25px);
-    background-color: #034c6a;
-    height: 110px;
-}
-
-.data_content .data_info .info_2 {
-    width: 31%;
-    height: 110px;
-}
-
-.data_content .data_info .info_2>.text_2 {
-    width: calc(100% - 25px);
-    background-color: #034c6a;
-    height: 110px;
-}
-
-.data_content .data_info .info_3 {
-    width: 29%;
-    height: 110px;
-}
-
-.data_content .data_info .info_3>.text_3 {
-    width: 100%;
-    background-color: #034c6a;
-    height: 110px;
-
-}
-
-.data_content .data_info>div.info_1>.text_1>div {
-    width: 33.333%;
-    position: relative;
-}
-
-.data_content .data_info>div.info_2>div>div,
-.data_content .data_info>div.info_3>div>div {
-    width: 50%;
-    position: relative;
-}
-
-.data_content .data_info img {
-    position: absolute;
-    top: 35px;
-    left: 15px;
-}
-
-.data_content .data_info>div>div>div>div {
-    margin-left: 65px;
-    margin-top: 23px;
-}
-
-.data_content .data_info>div.info_2>div>div>div {
-    margin-left: 70px;
-    margin-top: 23px;
-}
-
-.data_content .data_info p:nth-child(1) {
-    color: #fff;
-    font-size: 12.8px;
-}
-
-.data_content .data_info p:nth-child(2) {
-    font-weight: 600;
-    font-size: 28px;
-    color: #ffff43;
-}
-
-.data_content .data_info>div.info_2 p:nth-child(2) {
-    font-weight: 600;
-    font-size: 28px;
-    color: #25f3e6;
-}
-
-.data_content .data_info>div.info_3 p:nth-child(2) {
-    font-weight: 600;
-    font-size: 28px;
-    color: #ff4e4e;
-}
 
 .data_content .data_main {
     width: calc(100% - 40px);
@@ -133,14 +43,6 @@
     border: 1px solid #2C58A6;
     position: relative;
     box-shadow: 0 0 10px #2C58A6;
-}
-
-.data_content .data_main .main_left div.left_1 {
-    background: url("../img/chart_1.png") no-repeat center;
-}
-
-.data_content .data_main .main_left div.left_2 {
-    background: url("../img/chart_2.png") no-repeat center;
 }
 
 .data_content .data_main .main_left div:nth-child(1) {
@@ -276,7 +178,7 @@
 }
 
 .data_content .data_main .main_center .main_title img {
-    position: center;
+    position: absolute;
     top: 8px;
     left: 20px;
 }
