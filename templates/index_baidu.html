@@ -90,11 +90,11 @@
                     </div>
                     <div class="main_title">
                         <img src="/static/img/t_1.png" alt="">
-                        温度图!!!rua!!
+                        温度图
                     </div>
                     <div id="chart_1" class="chart" style="width:100%;height: 280px;">
                         <div class="chart" id="graph-2-container">
-                            <h2 class="title">tempreture</h2>
+                            <h2 class="title">temperature</h2>
                             <div class="chart-svg">
                                 <svg class="chart-line" id="chart-2" viewBox="0 0 80 40">
                                     <defs>
@@ -162,7 +162,7 @@
                     </div>
                     <div class="main_title">
                         <img src="/static/img/t_2.png" alt="">
-                        查询!查tmd!!!!
+                        查询
                     </div>
                     <div id="chart_2" class="chart t_btn9" style="width:100%;height: 280px;">
                         <form action="javascript:search()" method="post" id="search" class="input_node">
@@ -172,10 +172,9 @@
                         </form>
                         <table id="tt" class="divForm">
                             <tr style="background-color:black">
-                                <td>地点</td>
                                 <td>温度</td>
                                 <td>经度</td>
-                                <td>温度</td>
+                                <td>纬度</td>
                                 <td>状态</td>
                                 <td>时间</td>
                             </tr>
@@ -238,22 +237,6 @@
     $(document).ready(function () {
         getData();
     });
-    $(document).ready(function () {
-        searchdata();
-    });
-
-    function searchdata() {
-        $.ajax({
-            url: 'test',
-            data: {},
-            type: 'GET',
-            async: false,
-            dataType: 'json',
-            success: function (data) {
-
-            }
-        })
-    }
 
     function getData() {
         $.ajax({
@@ -270,23 +253,18 @@
                 for (i = 0; i < length; i++) {
                     var element = [
                         [{
-                            //legname1:[],
-                            name: [],
                             value: [],
                             longitude: [],
                             latitude: []
                         }, {
-                            name: [],
                             value: [],
                             longitude: [],
                             latitude: []
                         }]
                     ]
-                    element[0][0].name = data.name_1[i];
                     element[0][0].value = data.tempreture_1[i];
                     element[0][0].longitude = data.longitude_1[i];
                     element[0][0].latitude = data.latitude_1[i];
-                    element[0][1].name = data.name_2[i];
                     element[0][1].value = data.tempreture_2[i];
                     element[0][1].longitude = data.longitude_2[i];
                     element[0][1].latitude = data.latitude_2[i];
@@ -314,51 +292,38 @@
     }
 
     function aaa() {
-        var name = $("#bookName").val();
-        var pageIndex = $("#pageindex").val();
+        var r = $("#bookName").val();
         $.ajax({
             type: "get",
             url: "/search",
             data: {
-                'id': id;
+                'id': r
             },
             dataType: "json",
             success: function (data) {
                 var str = null;
-                var list = dat.infoList;
-                for (var i = 0; i < list.length; i++) {
-                    var book = list[i];
-                    var borr;
-                    if (book.borrowed == 0) {
-                        borr = "未借阅";
-                    } else if (book.borrowed == 1) {
-                        borr = "已借阅";
-                    }
-
-                    var creationTime = $.format.date(book.creationTime, "yyyy-MM-dd"); //时间插件js使用
-
-                    var stra = '<tr><td>' + book.bookCode +
-                        '</td><td>' + book.bookTypeName +
-                        '</td><td>' + book.bookName +
-                        '</td><td>' + book.bookAuthor +
-                        '</td><td>' + book.publishPress +
-                        '</td><td>' + creationTime +
-                        '</td><td>' + borr +
-                        '</td><td><a href="#">查看</a>&nbsp;&nbsp;' +
-                        '<a href="#">修改</a>&nbsp;&nbsp;' +
-                        '<a href="#">删除</a>' +
+                var tempreture = data.tempreture;
+                var longitude = data.longitude;
+                var latitude = data.latitude;
+                var lock = data.lock;
+                var time = data.time;
+                console.log(tempreture)
+                console.log(longitude)
+                console.log(latitude)
+                console.log(lock)
+                console.log(time)
+                for (var i = 0; i < name.length; i++) {
+                    var stra = '<tr><td>' + tempreture[i] +
+                        '</td><td>' + longitude[i] +
+                        '</td><td>' + latitude[i] +
+                        '</td><td>' + lock[i] +
+                        '</td><td>' + time[i] +
                         '</td></tr>';
                     str = str + stra;
                 }
                 $("#tt tr:gt(0)").remove();
                 $("#tt").append(str);
                 $("#tt tr:even").css("background-color", "grey");
-                $("#currentPageNo").val(dat.currentPageNo);
-                $("#currentPageNo").html(dat.currentPageNo);
-                $("#max").val(dat.totalPageCount);
-                $("#max").html(dat.totalPageCount);
-                $("#totalCount").val(dat.totalCount);
-                $("#totalCount").html(dat.totalCount);
             }
         })
     }
