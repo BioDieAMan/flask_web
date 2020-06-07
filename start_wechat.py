@@ -3,12 +3,9 @@
 from flask import Flask, render_template, request, jsonify
 import sqlite3
 import json
-import sqlite3
 from datetime import timedelta
 
 import time
-
-from flask import Flask, jsonify, render_template, request
 
 
 app = Flask(__name__)
@@ -16,17 +13,37 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + './newtest.db'
 app.config['SQLALCHEMY_TRACK_MODIFCATIONS'] = True
 
 
+@app.route('/get-lock', methods=['GET'])
+def get_lock():
+    get = request.args.get('lock')
+    idd = request.args.get('number')
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM statelock where id='+str(idd)
+    cur.execute(sql)
+    see = cur.fetchall()
+    done = 'no need to change the state'
+    if see[0][1] != int(get):
+        print(get)
+        print(idd)
+        new_sql = "update statelock set lock=" + \
+            str(get)+" where id="+str(idd)
+        cur.execute(new_sql)
+        connection.commit()
+        done = 'changed'
+    cur.close()
+    connection.close()
+    return done
+
+
 @app.route('/get-wechat', methods=['GET'])
 def get_wechat():
-    print('请求方式为------->', request.method)
     # args = request.args.get("name")
     form = request.args.get('number')
-    print(form)
-    print(type(form))
 
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM coocha where id='+str(form)
+    sql = 'SELECT * FROM coochatable where id='+str(form)
     cur.execute(sql)
     see = cur.fetchall()
 
@@ -35,34 +52,37 @@ def get_wechat():
     tempreture = []
     longitude = []
     latitude = []
+    lock = []
+    timme = []
     jsonData = {}
     for index, data in enumerate(see):
-        tempreture.append(data[2])
-        longitude.append(data[3])
-        latitude.append(data[4])
+        tempreture.append(data[1])
+        longitude.append(data[2])
+        latitude.append(data[3])
+        lock.append(data[4])
+        timme.append(data[5])
+
     jsonData['tempreture'] = tempreture
     jsonData['longitude'] = longitude
     jsonData['latitude'] = latitude
-    jsonData['lock'] = ['0']
+    jsonData['lock'] = lock
+    jsonData['time'] = timme
     dataout = json.dumps(jsonData)
     cur.close()
     connection.close()
 
-    print("=========成功 生成 index.html==============")
     return jsonify(data=(dataout))
 
 
 @app.route('/search', methods=['GET'])
 def search():
     idd = request.args.get('id')
-    print(idd)
 
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM coocha where id='+str(idd)
+    sql = 'SELECT * FROM coochatable where id='+str(idd)
     cur.execute(sql)
     see = cur.fetchall()
-    print(see)
 
     tempreture = []
     longitude = []
@@ -72,11 +92,11 @@ def search():
     jsonData = {}
 
     for data in see:
-        tempreture.append(data[2])
-        longitude.append(data[3])
-        latitude.append(data[4])
-        lock.append(data[5])
-        time.append(data[6])
+        tempreture.append(data[1])
+        longitude.append(data[2])
+        latitude.append(data[3])
+        lock.append(data[4])
+        time.append(data[5])
     jsonData['tempreture'] = tempreture
     jsonData['longitude'] = longitude
     jsonData['latitude'] = latitude
@@ -90,7 +110,7 @@ def search():
 def temp():
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM coocha'
+    sql = 'SELECT * FROM coochatable where id=16'
     cur.execute(sql)
     see = cur.fetchall()
     tempreture_1 = []
@@ -108,7 +128,7 @@ def temp():
 def test():
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM coocha'
+    sql = 'SELECT * FROM coochatable where id='+'16'
     cur.execute(sql)
     see = cur.fetchall()
     id = []
@@ -121,12 +141,12 @@ def test():
     jsonData = {}
     for index, data in enumerate(see):
         if index != len(see)-1:
-            tempreture_1.append(data[2])
-            longitude_1.append(data[3])
-            latitude_1.append(data[4])
-            tempreture_2.append(see[index+1][2])
-            longitude_2.append(see[index+1][3])
-            latitude_2.append(see[index+1][4])
+            tempreture_1.append(data[1])
+            longitude_1.append(data[2])
+            latitude_1.append(data[3])
+            tempreture_2.append(see[index+1][1])
+            longitude_2.append(see[index+1][2])
+            latitude_2.append(see[index+1][3])
         if index == len(see)-1:
             pass
 

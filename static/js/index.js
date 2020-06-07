@@ -33,7 +33,7 @@ function getemp() {
 
             var chart_2_y = [];
             for (i = 0; i < length; i++) {
-                chart_2_y.push(data.tempreture_1[i] * 10)
+                chart_2_y.push(data.tempreture_1[i])
             }
             //TODO 更新温度数值到指定范围内的映射
             function point(x, y) {

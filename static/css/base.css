@@ -51,10 +51,18 @@ form {
     margin: inherit;
 }
 
+table {
+    width: 100%;
+    text-align: center;
+}
+
 td {
-    width: 50px;
+    width: 1%;
     background-color: slategray;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /*清除浮动*/
