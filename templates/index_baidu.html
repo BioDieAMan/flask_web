@@ -62,9 +62,6 @@
 
     <!--main-->
     <div class="data_content">
-        <div class="data_time">
-            温馨提示: 点击模块后跳转至详情页面。
-        </div>
         <div class="data_main">
             <div class="main_left fl">
                 <div class="left_1 t_btn6" style="cursor: pointer;">
@@ -94,7 +91,7 @@
                     </div>
                     <div id="chart_1" class="chart" style="width:100%;height: 280px;">
                         <div class="chart" id="graph-2-container">
-                            <h2 class="title">temperature</h2>
+                            <h2 class="title" id='tempo'>temperature</h2>
                             <div class="chart-svg">
                                 <svg class="chart-line" id="chart-2" viewBox="0 0 80 40">
                                     <defs>
@@ -118,15 +115,13 @@
                                             <stop offset="0.5" stop-color="rgba(0, 213, 189, 1)" stop-opacity="0.13" />
                                             <stop offset="1" stop-color="rgba(0, 213, 189, 1)" stop-opacity="0" />
                                         </linearGradient>
-                                        <!-- 
 
                                         <linearGradient id="gradient-4" x1="0%" y1="0%" x2="0%" y2="100%">>
                                             <stop offset="0" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0.07" />
                                             <stop offset="0.5" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0.13" />
                                             <stop offset="1" stop-color="rgba(149, 76, 233, 1)" stop-opacity="0" />
-                                        </linearGradient>  -->
+                                        </linearGradient>
 
-                                    </defs>
                                 </svg>
                             </div>
                             <div class="chart-values">
@@ -225,73 +220,218 @@
 
 </html>
 
-<script type="text/javascript">
-    // 百度地图API功能
-    var map = new BMap.Map("container");
-    map.centerAndZoom(new BMap.Point(118.454, 32.955), 6);
-    map.enableScrollWheelZoom();
-
-    var GZData = [];
-
-    $(document).ready(function () {
-        getData();
-    });
-
-    function getData() {
-        $.ajax({
-            url: 'test',
-            data: {},
-            type: 'POST',
-            async: false,
-            dataType: 'json',
-            success: function (data) {
-                var length = data.tempreture_1.length
-                console.log(data)
-                console.log(typeof length)
-
-                for (i = 0; i < length; i++) {
-                    var element = [
-                        [{
-                            value: [],
-                            longitude: [],
-                            latitude: []
-                        }, {
-                            value: [],
-                            longitude: [],
-                            latitude: []
-                        }]
-                    ]
-                    element[0][0].value = data.tempreture_1[i];
-                    element[0][0].longitude = data.longitude_1[i];
-                    element[0][0].latitude = data.latitude_1[i];
-                    element[0][1].value = data.tempreture_2[i];
-                    element[0][1].longitude = data.longitude_2[i];
-                    element[0][1].latitude = data.latitude_2[i];
-                    var pos1 = new BMap.Point(element[0][0].longitude, element[0][0].latitude),
-                        pos2 = new BMap.Point(element[0][1].longitude, element[0][1].latitude);
-                    var points = [pos1, pos2];
-
-                    var curve = new BMap.Polyline(points, {
-                        strokeColor: "blue",
-                        strokeWeight: 3,
-                        strokeOpacity: 0
-                    }); //创建弧线对象
-                    map.addOverlay(curve); //添加到地图中
-                }
-                var marker = new BMap.Marker(pos2); // 创建标注
-                map.addOverlay(marker); // 将标注添加到地图中
-                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-            }
-        })
-    }
-</script>
 <script>
+    var process;
+    var timeee = 0;
+    var parent = document.getElementById("chart-2");
+    var son = document.getElementById("grid");
+
     function search() {
-        aaa();
+        var r = $("#bookName").val();
+        window.clearInterval(process);
+        var map = new BMap.Map("container");
+        map.centerAndZoom(new BMap.Point(118.454, 32.955), 6);
+        map.enableScrollWheelZoom();
+        var process = setInterval(function () {
+            map.clearOverlays();
+            aaa(map);
+        }, 8000);
     }
 
-    function aaa() {
+
+    function aaa(map) {
         var r = $("#bookName").val();
+        getemp();
+
+        function getemp() {
+            $.ajax({
+                url: 'temp',
+                data: {
+                    id: r
+                },
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (timeee != 0) {
+                        parent = document.getElementById("chart-2");
+                        son = document.getElementById("grid");
+                        parent.removeChild(son);
+                        son = document.getElementById("graph-2");
+                        parent.removeChild(son);
+                        son = document.getElementById("poly-2");
+                        parent.removeChild(son);
+                    }
+                    var length = Number(data.tempreture_1.length);
+
+                    var stepX = 77 / 14;
+                    // Snap.selectALL('#chart-2').remove();
+
+                    var chart_2_y = [];
+                    var i = 0;
+                    for (i = 0; i < length; i++) {
+                        chart_2_y.push(data.tempreture_1[i] * 2)
+                    }
+                    document.getElementById("tempo").innerHTML = "temperature: " + Number(data
+                            .tempreture_1[
+                                i - 1])
+                        .toString() + "°C";
+                    //TODO 更新温度数值到指定范围内的映射
+                    function point(x, y) {
+                        x: 0;
+                        y: 0;
+                    }
+                    /* DRAW GRID */
+                    function drawGrid(graph) {
+                        var graph = Snap(graph);
+                        // graph.selectAll().remove();
+                        var g = graph.g();
+                        g.attr('id', 'grid');
+                        for (i = 0; i <= stepX + 2; i++) {
+                            var horizontalLine = graph.path(
+                                "M" + 0 + "," + stepX * i + " " +
+                                "L" + 77 + "," + stepX * i);
+                            horizontalLine.attr('class', 'horizontal');
+                            g.add(horizontalLine);
+                        };
+                        for (i = 0; i <= 14; i++) {
+                            var horizontalLine = graph.path(
+                                "M" + stepX * i + "," + 38.7 + " " +
+                                "L" + stepX * i + "," + 0)
+                            horizontalLine.attr('class', 'vertical');
+                            g.add(horizontalLine);
+                        };
+                    }
+                    drawGrid('#chart-2');
+
+                    function drawLineGraph(graph, points, container, id) {
+
+
+                        var graph = Snap(graph);
+                        // graph.remove();
+
+
+                        /*END DRAW GRID*/
+
+                        /* PARSE POINTS */
+                        var myPoints = [];
+                        var shadowPoints = [];
+
+                        function parseData(points) {
+                            for (i = 0; i < points.length; i++) {
+                                var p = new point();
+                                var pv = points[i] / 100 * 40;
+                                p.x = 83.7 / points.length * i + 1;
+                                p.y = 40 - pv;
+                                if (p.x > 78) {
+                                    p.x = 78;
+                                }
+                                myPoints.push(p);
+                            }
+                        }
+
+                        var segments = [];
+
+                        function createSegments(p_array) {
+                            for (i = 0; i < p_array.length; i++) {
+                                var seg = "L" + p_array[i].x + "," + p_array[i].y;
+                                if (i === 0) {
+                                    seg = "M" + p_array[i].x + "," + p_array[i].y;
+                                }
+                                segments.push(seg);
+                            }
+                        }
+
+                        function joinLine(segments_array, id) {
+                            var line = segments_array.join(" ");
+                            // console.log(line);
+                            var line = graph.path(line);
+                            line.attr('id', 'graph-' + id);
+                            var lineLength = line.getTotalLength();
+
+                            line.attr({
+                                'stroke-dasharray': lineLength,
+                                'stroke-dashoffset': lineLength
+                            });
+                        }
+
+
+
+                        function showValues() {
+                            var val1 = $(graph).find('.h-value');
+                            var val2 = $(graph).find('.percentage-value');
+                            val1.addClass('visible');
+                            val2.addClass('visible');
+                        }
+
+                        function drawPolygon(segments, id) {
+                            var lastel = segments[segments.length - 1];
+                            var polySeg = segments.slice();
+                            polySeg.push([78, 38.4], [1, 38.4]);
+                            // console.log('polyseg');
+                            // console.log(polySeg);
+
+                            var polyLine = polySeg.join(' ').toString();
+                            var replacedString = polyLine.replace(/L/g, '').replace(/M/g, "");
+
+                            // console.log(replacedString);
+
+                            var poly = graph.polygon(replacedString);
+                            // console.log(poly);
+
+                            var clip = graph.rect(-80, 0, 80, 40);
+                            // clip.paper.circle.mouseover({
+                            //     function () {
+                            //         console.log('sd');
+                            //     }
+                            // })
+
+
+
+                            poly.attr({
+                                'id': 'poly-' + id,
+                                //'clipPath':'url(#clip)'
+                                'clipPath': clip
+                            });
+                            // console.log(poly);
+
+                            clip.animate({
+                                transform: 't80,0'
+                            }, 1300, mina.linear);
+                        }
+                        parseData(points);
+                        console.log(myPoints);
+                        createSegments(myPoints);
+                        // calculatePercentage(points, container);
+                        joinLine(segments, id);
+
+                        drawPolygon(segments, id);
+                        showValues();
+
+
+
+                        /*$('#poly-'+id).attr('class','show');*/
+
+                        /* function drawPolygon(segments,id){
+                          var polySeg = segments;
+                          polySeg.push([80,40],[0,40]);
+                          var polyLine = segments.join(' ').toString();
+                          var replacedString = polyLine.replace(/L/g,'').replace(/M/g,"");
+                          var poly = graph.polygon(replacedString);
+                          poly.attr('id','poly-'+id)
+                        }
+                        drawPolygon(segments,id);*/
+                    }
+                    // drawLineGraph('#chart-1', chart_1_y, '#graph-1-container', 2);
+                    drawLineGraph('#chart-2', chart_2_y, '#graph-2-container', 2);
+                }
+            })
+        }
+
+        if (timeee == 0) {
+            timeee += 1;
+        }
+
         $.ajax({
             type: "get",
             url: "/search",
@@ -320,5 +460,56 @@
                 $("#tt tr:even").css("background-color", "grey");
             }
         })
+
+        // 百度地图API功能
+
+        var GZData = [];
+        getData(r, map, GZData);
+
+        function getData(r, map, GZData) {
+            $.ajax({
+                url: '/test',
+                data: {
+                    id: r
+                },
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+                    var length = data.longitude_1.length;
+
+                    for (i = 0; i < length; i++) {
+                        var element = [
+                            [{
+                                longitude: [],
+                                latitude: []
+                            }, {
+                                longitude: [],
+                                latitude: []
+                            }]
+                        ]
+                        element[0][0].longitude = data.longitude_1[i];
+                        element[0][0].latitude = data.latitude_1[i];
+                        element[0][1].longitude = data.longitude_2[i];
+                        element[0][1].latitude = data.latitude_2[i];
+                        var pos1 = new BMap.Point(element[0][0].longitude, element[0][0].latitude),
+                            pos2 = new BMap.Point(element[0][1].longitude, element[0][1].latitude);
+                        var points = [pos1, pos2];
+
+                        var curve = new BMap.Polyline(points, {
+                            strokeColor: "blue",
+                            strokeWeight: 3,
+                            strokeOpacity: 0
+                        }); //创建弧线对象
+                        map.addOverlay(curve); //添加到地图中
+                    }
+                    var marker = new BMap.Marker(pos2); // 创建标注
+                    map.addOverlay(marker); // 将标注添加到地图中
+                    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                }
+            })
+        }
+
+
     }
 </script>

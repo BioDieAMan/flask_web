@@ -76,26 +76,8 @@ def get():
         if lockornot[0] == int(idd):
             lock = str(lockornot[1])
     print("=========成功 生成 index.html==============")
-    jsondata['lock'] = lock
+    jsondata['lock'] = '1'
     dataout = json.dumps(jsondata)
-    return (dataout)
-
-
-@app.route('/temp', methods=['POST'])
-def temp():
-    connection = sqlite3.connect('./newtest.db')
-    cur = connection.cursor()
-    sql = 'SELECT * FROM coochatable'
-    cur.execute(sql)
-    see = cur.fetchall()
-    tempreture_1 = []
-    jsonData = {}
-    for data in see:
-        tempreture_1.append(data[1])
-    jsonData['tempreture_1'] = tempreture_1
-    dataout = json.dumps(jsonData)
-    cur.close()
-    connection.close()
     return (dataout)
 
 
@@ -128,6 +110,23 @@ def search():
     jsonData['lock'] = lock
     jsonData['time'] = time
     dataout = json.dumps(jsonData)
+    return (dataout)
+
+
+@app.route('/temp', methods=['POST'])
+def temp():
+    idd = request.form.get('id')
+    connection = sqlite3.connect('./newtest.db')
+    cur = connection.cursor()
+    sql = 'SELECT * FROM coochatable where id='+str(idd)
+    cur.execute(sql)
+    see = cur.fetchall()
+    tempreture_1 = []
+    jsonData = {}
+    for data in see:
+        tempreture_1.append(data[1])
+    jsonData['tempreture_1'] = tempreture_1
+    dataout = json.dumps(jsonData)
     cur.close()
     connection.close()
     return (dataout)
@@ -135,34 +134,29 @@ def search():
 
 @app.route('/test', methods=['POST'])
 def test():
+    idd = request.form.get('id')
     connection = sqlite3.connect('./newtest.db')
     cur = connection.cursor()
-    sql = 'SELECT * FROM coochatable '+'where id=' + '16'
+    sql = 'SELECT * FROM coochatable where id='+str(idd)
     cur.execute(sql)
     see = cur.fetchall()
     id = []
-    tempreture_1 = []
     longitude_1 = []
     latitude_1 = []
-    tempreture_2 = []
     longitude_2 = []
     latitude_2 = []
     jsonData = {}
     for index, data in enumerate(see):
         if index != len(see)-1:
-            tempreture_1.append(data[1])
             longitude_1.append(data[2])
             latitude_1.append(data[3])
-            tempreture_2.append(see[index+1][1])
             longitude_2.append(see[index+1][2])
             latitude_2.append(see[index+1][3])
         if index == len(see)-1:
             pass
 
-    jsonData['tempreture_1'] = tempreture_1
     jsonData['longitude_1'] = longitude_1
     jsonData['latitude_1'] = latitude_1
-    jsonData['tempreture_2'] = tempreture_2
     jsonData['longitude_2'] = longitude_2
     jsonData['latitude_2'] = latitude_2
     dataout = json.dumps(jsonData)
